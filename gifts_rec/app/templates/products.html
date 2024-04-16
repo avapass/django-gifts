@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}
+Products list - {{ block.super }}
+{% endblock title %}
+{% block body %}
+    {% for product in products %}
+        <ul>
+            <a href="{% url 'product-page' product.id %}" target="_blank">{{ product }}</a> - {{ product.price }} EUROS
+        </ul>
+    {% endfor %}
+{% endblock body %}
