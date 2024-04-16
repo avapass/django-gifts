@@ -5,14 +5,18 @@ from .models import Product
 
 # Create your views here.
 
+def hello(request):
+    return render(request, "base.html")
+
 def products_list(request):
     products = Product.objects.all()
-    products_fixed = [
-        f"<li>{product.title} - {product.price}</li>"
-        for product in products
-    ]
-    response_string = "<ol>"
-    response_string += "".join(products_fixed)
-    response_string += "</ol>"
+    products = products.order_by("-price", "title")
 
-    return HttpResponse(response_string)
+    return render(request, "products.html", {"products": products})
+
+def product(request, id):
+    try:
+        product = Product.objects.get(id=id)
+    except Product.DoesNotExist:
+        return HttpResponse("404")
+    return HttpResponse(f"{product}")
