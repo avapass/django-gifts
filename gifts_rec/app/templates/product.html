@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+Product {{ product.title }} - {{ block.super }}
+{% endblock title %}
+{% block body %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <img style="width:200px; height:auto;" src="{% if product.image %}{{ product.image.url }}{% endif %}" class="card-img-top"></br>
+                    <a href="{% url 'product-page' product.id %}" target="_blank">{{ product }}</a>
+                </h5>
+                <div id="favourite-section">
+                    {% if is_favourite %}
+                        <a href="{% url 'favourite-prod' product.id %}">
+                            <i class="bi bi-heart-fill"></i>
+                        </a>
+                    {% else %}
+                        <a href="{% url 'favourite-prod' product.id %}">
+                            <i class="bi bi-heart"></i>
+                        </a>
+                    {% endif %}
+                </div>
+                <br>
+                <p class="card-text">{{ product.price }} EUROS</p>
+            </div>
+        </div>
+    </div>
+
+    <h2>THIS IS THE PRODUCT THAT YOU ARE WATCHING NOW</h2>
+{% endblock body %}

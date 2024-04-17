@@ -25,4 +25,6 @@ urlpatterns = [
     path('', views.hello, name="home"),
     path('products-list', views.products_list, name="products-list"),
     path('product/<int:id>/', views.product, name="product-page"),
+    path('favourite-prod/<int:id>/', views.favourite_prod, name='favourite-prod'),
+    path('favourites', views.favourite_list, name="favourite-list"),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)

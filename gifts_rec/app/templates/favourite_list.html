@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}
+Favourites - {{ block.super }}
+{% endblock title %}
+{% block body %}
+
+<div class="row">
+    {% for product in favourite_prod %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <img style="width:200px; height:auto;" src="{% if product.image %}{{ product.image.url }}{% endif %}" class="card-img-top"></br>
+                    <a href="{% url 'product-page' product.id %}" target="_blank">{{ product }}</a>
+                </h5>
+                <p class="card-text">{{ product.price }} EUROS </p>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+        <div class="container-fluid">
+            <h3>No favourite products found.</h3>
+        </div>
+    {% endfor %}
+</div>
+
+{% endblock body %}

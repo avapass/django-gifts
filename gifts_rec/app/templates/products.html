@@ -13,12 +13,11 @@ Products list - {{ block.super }}
                             <img style="width:200px; height:auto;" src="{% if product.image %}{{ product.image.url }}{% endif %}" class="card-img-top"></br>
                             <a href="{% url 'product-page' product.id %}" target="_blank">{{ product }}</a>
                         </h5>
-                        <br>
-                        <p class="card-text">{{ product.price }} EUROS</p>
+                        <p class="card-text">{{ product.price }} EUROS </p>
                     </div>
                 </div>
             </div>
-    {% endfor %}
+            {% endfor %}
         </div>
     </div>
 {% endblock body %}
