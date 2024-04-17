@@ -27,4 +27,7 @@ urlpatterns = [
     path('product/<int:id>/', views.product, name="product-page"),
     path('favourite-prod/<int:id>/', views.favourite_prod, name='favourite-prod'),
     path('favourites', views.favourite_list, name="favourite-list"),
+    # path('contact', views.contact, name='contact'),
+    path('login', views.custom_login, name="login"),
+    path('logout', views.logout_view, name="logout"),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)

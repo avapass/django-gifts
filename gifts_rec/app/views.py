@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
-from django.urls import reverse
+from django.contrib.auth import authenticate, login, logout
 
 from .models import Product
+from .forms import CustomLoginForm
 
 # Create your views here.
 
@@ -43,3 +44,27 @@ def favourite_prod(request, id):
     else:
         product.favourite.add(request.user)
     return HttpResponseRedirect(product.get_absolute_url())
+
+# def contact(request):
+#     form = ContactForm()
+#     if request.method == "POST":
+#         form = ContactForm(request.POST)
+#         if form.is_valid():
+#             subiect = form.cleaned_data["subiect"]
+#             mesaj = form.cleaned_data["mesaj"]
+#             email = form.cleaned_data["email"]
+#     return redirect("/")
+
+def custom_login(request):
+    form = CustomLoginForm()
+    if request.method == "POST":
+        form = CustomLoginForm(request.POST)
+        if form.is_valid():
+            login(request, form.authenticated_user)
+            return redirect("/")
+
+    return render(request, 'login.html', {'form': form})
+
+def logout_view(request):
+    logout(request)
+    return redirect("/")
