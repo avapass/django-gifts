@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 
 from .models import Product
 from .forms import CustomLoginForm
@@ -16,6 +17,7 @@ def products_list(request):
 
     return render(request, "products.html", {"products": products})
 
+@login_required
 def product(request, id):
     product = get_object_or_404(Product, id=id)
     is_favourite = False
@@ -32,6 +34,7 @@ def product(request, id):
     }
     return render(request, "product.html", context)
 
+@login_required
 def favourite_list(request):
     user = request.user
     favourite_prod = user.favourite.all()
@@ -45,17 +48,9 @@ def favourite_prod(request, id):
         product.favourite.add(request.user)
     return HttpResponseRedirect(product.get_absolute_url())
 
-# def contact(request):
-#     form = ContactForm()
-#     if request.method == "POST":
-#         form = ContactForm(request.POST)
-#         if form.is_valid():
-#             subiect = form.cleaned_data["subiect"]
-#             mesaj = form.cleaned_data["mesaj"]
-#             email = form.cleaned_data["email"]
-#     return redirect("/")
-
 def custom_login(request):
+    if request.user.is_authenticated:
+        return redirect('home')
     form = CustomLoginForm()
     if request.method == "POST":
         form = CustomLoginForm(request.POST)
