@@ -28,6 +28,7 @@ urlpatterns = [
     path('favourite-prod/<int:id>/', views.favourite_prod, name='favourite-prod'),
     path('favourites', views.favourite_list, name="favourite-list"),
     # path('contact', views.contact, name='contact'),
+    path('register', views.custom_register, name="register"),
     path('login', views.custom_login, name="login"),
     path('logout', views.logout_view, name="logout"),
     path('questionnaire', views.questionnaire, name='questionnaire'),

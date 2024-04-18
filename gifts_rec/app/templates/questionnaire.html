@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block body %}
 <h1>Questionnaire</h1>
-<form action="" method="POST">
+<form method="POST" action="" >
     {% csrf_token %}
     
         {{ form.as_p }}

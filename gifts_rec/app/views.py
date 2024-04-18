@@ -1,10 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 
+from django.contrib import messages
+
 from .models import Product
-from .forms import CustomLoginForm, QuestionnaireForm
+from .forms import CustomLoginForm, QuestionnaireForm, CreateUserForm
 
 # Create your views here.
 
@@ -47,6 +50,21 @@ def favourite_prod(request, id):
     else:
         product.favourite.add(request.user)
     return HttpResponseRedirect(product.get_absolute_url())
+
+def custom_register(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    form = CreateUserForm()
+    if request.method == "POST":
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            form.save()
+            user = form.cleaned_data.get('username')
+            messages.success(request, 'Account was created for ' + user)
+            return redirect("login")
+
+    context={"form": form}
+    return render(request, 'register.html', context)
 
 def custom_login(request):
     if request.user.is_authenticated:
