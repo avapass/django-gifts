@@ -14,9 +14,11 @@
               <a class="py-2 d-none d-md-inline-block" href="{% url 'home' %}">Homepage</a>
               <a class="py-2 d-none d-md-inline-block" href="{% url 'products-list' %}">Products</a>
               <a class="py-2 d-none d-md-inline-block" href="{% url 'favourite-list' %}">Favourites</a>
+              <a class="py-2 d-none d-md-inline-block" href="{% url 'questionnaire' %}">Questionnaire</a>
               <li class="nav-item float-right">
                 {% if request.user.is_authenticated %}
-                  <a class="py-2 d-none d-md-inline-block" href="{% url 'logout' %}">Hello, {{ request.user.username }} &nbsp;&nbsp; Logout</a>
+                You are logged in as {{ request.user.username|capfirst }} &nbsp;&nbsp; &nbsp;&nbsp; 
+                  <a class="py-2 d-none d-md-inline-block" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                   <a class="py-2 d-none d-md-inline-block" href="{% url 'login' %}">Login</a>
                 {% endif %}

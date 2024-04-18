@@ -16,3 +16,12 @@ class Product(models.Model):
 
     def get_absolute_url(self):
         return reverse_lazy("product-page", args=(self.id,))
+
+# A1 = (
+#     ('green', 'GREEN'),
+#     ('blue', 'BLUE'),
+#     ('red', 'RED'),
+# )
+
+# class Questionnaire(models.Model):
+#     q1 = models.CharField(max_length=15, choices=A1, default='green')

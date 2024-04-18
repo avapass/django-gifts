@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 from .models import Product
-from .forms import CustomLoginForm
+from .forms import CustomLoginForm, QuestionnaireForm
 
 # Create your views here.
 
@@ -63,3 +63,20 @@ def custom_login(request):
 def logout_view(request):
     logout(request)
     return redirect("/")
+
+@login_required
+def questionnaire(request):
+    form = QuestionnaireForm()
+    if request.method == "POST":
+        form = QuestionnaireForm(request.POST)
+        if form.is_valid():
+            return redirect("/")
+        else:
+            HttpResponse("ERROR")
+    return render(request, 'questionnaire.html', {'form': form})
+
+# class CreateQuestionnaireView(CreateView):
+#     model = Questionnaire
+#     form_class = QuestionnaireForm
+#     template_name = "questionnaire.html"
+#     succes_url = "/"

@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 {% block body %}
-<h1>Login page</h1>
-<form method="POST">
+<h1>Questionnaire</h1>
+<form action="" method="POST">
     {% csrf_token %}
     
         {{ form.as_p }}
-    <input type="submit" value="LOGIN"/>
+    <input type="submit" value="Submit your answers!"/>
 </form>
 {% endblock body %}

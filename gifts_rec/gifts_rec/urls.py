@@ -30,4 +30,5 @@ urlpatterns = [
     # path('contact', views.contact, name='contact'),
     path('login', views.custom_login, name="login"),
     path('logout', views.logout_view, name="logout"),
+    path('questionnaire', views.questionnaire, name='questionnaire'),
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)

@@ -1,6 +1,7 @@
 from django import forms
 from django.forms import ValidationError
 from django.contrib.auth import authenticate
+# from .models import Questionnaire
 
 # class ContactForm(forms.Form):
 #     email = forms.EmailField(required=True)
@@ -26,3 +27,13 @@ class CustomLoginForm(forms.Form):
         else:
             self.authenticated_user = user
         return self.cleaned_data
+
+AW1 = {"1": "blue", "2": "green", "3": "red"}
+
+class QuestionnaireForm(forms.Form):
+    q1 = forms.CharField(label='What color do you like the most?', widget=forms.Select(choices=AW1))
+
+# class QuestionnaireForm(forms.Form):
+#     class Meta:
+#         model = Questionnaire
+#         fields = '__all__'
