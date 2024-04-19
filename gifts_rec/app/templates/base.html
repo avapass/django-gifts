@@ -6,6 +6,14 @@
         <link rel="stylesheet" href="http://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
     </head>
     <body>
+
+      <style>
+        #hello-msg{
+          font-size: 16px;
+          margin-right: 10px;
+        }
+      </style>
+
         <nav class="site-header sticky-top py-1">
             <div class="container d-flex flex-column flex-md-row justify-content-between">
               <a class="py-2" href="#">
@@ -17,7 +25,9 @@
               <a class="py-2 d-none d-md-inline-block" href="{% url 'questionnaire' %}">Questionnaire</a>
               <li class="nav-item float-right">
                 {% if request.user.is_authenticated %}
-                You are logged in as {{ request.user.username|capfirst }} &nbsp;&nbsp; &nbsp;&nbsp; 
+                <span id="hello-msg">
+                  You are logged in as {{ request.user.username|capfirst }} &nbsp;&nbsp; &nbsp;&nbsp; 
+                </span>
                   <a class="py-2 d-none d-md-inline-block" href="{% url 'logout' %}">Logout</a>
                 {% else %}
                   <a class="py-2 d-none d-md-inline-block" href="{% url 'login' %}">Login</a>

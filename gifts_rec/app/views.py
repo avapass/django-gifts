@@ -54,14 +54,15 @@ def favourite_prod(request, id):
 def custom_register(request):
     if request.user.is_authenticated:
         return redirect('home')
-    form = CreateUserForm()
-    if request.method == "POST":
-        form = CreateUserForm(request.POST)
-        if form.is_valid():
-            form.save()
-            user = form.cleaned_data.get('username')
-            messages.success(request, 'Account was created for ' + user)
-            return redirect("login")
+    else:
+        form = CreateUserForm()
+        if request.method == "POST":
+            form = CreateUserForm(request.POST)
+            if form.is_valid():
+                form.save()
+                user = form.cleaned_data.get('username')
+                messages.success(request, 'Account was created for ' + user)
+                return redirect("login")
 
     context={"form": form}
     return render(request, 'register.html', context)
@@ -69,12 +70,13 @@ def custom_register(request):
 def custom_login(request):
     if request.user.is_authenticated:
         return redirect('home')
-    form = CustomLoginForm()
-    if request.method == "POST":
-        form = CustomLoginForm(request.POST)
-        if form.is_valid():
-            login(request, form.authenticated_user)
-            return redirect("/")
+    else:
+        form = CustomLoginForm()
+        if request.method == "POST":
+            form = CustomLoginForm(request.POST)
+            if form.is_valid():
+                login(request, form.authenticated_user)
+                return redirect("/")
 
     return render(request, 'login.html', {'form': form})
 
