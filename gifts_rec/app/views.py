@@ -4,6 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 from django.contrib import messages
 
@@ -27,10 +28,6 @@ def product(request, id):
     is_favourite = False
     if product.favourite.filter(id=request.user.id).exists():
         is_favourite = True
-    # try:
-    #     product = Product.objects.get(id=id)
-    # except Product.DoesNotExist:
-    #     return HttpResponse("404")
 
     context = {
         'product': product,
@@ -92,22 +89,23 @@ def questionnaire(request):
     if request.method == 'POST':
         form = QuestionnaireForm(request.POST)
         if form.is_valid():
+            user_preferences = {}
             for question in questionnaire.questions.all():
-                preference = form.cleaned_data.get('question_{}'.format(question.id))
-                return HttpResponse("ok")
+                preference_id = form.cleaned_data.get('question_{}'.format(question.id))
+                preference_text = question.answers.get(id=preference_id).text if preference_id is not None else None
+                user_preferences[question.id] = preference_text
+
+            products = Product.objects.all()
+
+            search_words = [preference for preference in user_preferences.values() if preference is not None]
+
+            selected_products = []
+            for product in products:
+                if all(word in product.description for word in search_words):
+                    selected_products.append(product.title)
+
+            return render(request, 'questionnaire_res.html', {'products': selected_products})
     else:
         form = QuestionnaireForm()
     return render(request, 'questionnaire.html', {'form': form})
 
-
-
-def questionnaire_res(request):
-    return HttpResponse("Hello, this is your result items")
-
-
-
-# class CreateQuestionnaireView(CreateView):
-#     model = Questionnaire
-#     form_class = QuestionnaireForm
-#     template_name = "questionnaire.html"
-#     succes_url = "/"

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}
+Questionnaire Results - {{ block.super }}
+{% endblock title %}
+{% block body %}
+    <div id="questionnaire-products" action="">
+        {% for product in products %}
+                <h3> {{ product.title }} </h3>
+                <p>{{ product.description}}</p>
+                <p>Price: {{ product.price }}</p>
+        {% endfor %}
+    </div>
+
+{% endblock body %}
