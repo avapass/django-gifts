@@ -38,11 +38,16 @@ class Answer(models.Model):
     def __str__(self):
         return self.text
 
-class Response(models.Model):
-    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE, blank=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True)
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, blank=True)
+class UserProduct(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    
+    class Meta:
+        unique_together = ('user', 'product')
+
+    
+
+
 
 
 # class User(AbstractUser):

@@ -8,7 +8,7 @@ from django.urls import reverse
 
 from django.contrib import messages
 
-from .models import Product, Question, Answer, Questionnaire
+from .models import Product, Question, Answer, Questionnaire, UserProduct
 from .forms import CustomLoginForm, CreateUserForm, QuestionnaireForm
 
 # Create your views here.
@@ -89,23 +89,36 @@ def questionnaire(request):
     if request.method == 'POST':
         form = QuestionnaireForm(request.POST)
         if form.is_valid():
+            user_id = request.user.id
+            
+            UserProduct.objects.filter(user=request.user).delete()
+
             user_preferences = {}
             for question in questionnaire.questions.all():
-                preference_id = form.cleaned_data.get('question_{}'.format(question.id))
+                preference_id = form.cleaned_data.get(f'question_{question.id}')
                 preference_text = question.answers.get(id=preference_id).text if preference_id is not None else None
                 user_preferences[question.id] = preference_text
 
             products = Product.objects.all()
 
             search_words = [preference for preference in user_preferences.values() if preference is not None]
-
             selected_products = []
+
             for product in products:
                 if all(word in product.description for word in search_words):
-                    selected_products.append(product.title)
+                    selected_products.append(product)
+            
+            for product in selected_products:
+                UserProduct.objects.get_or_create(user_id=user_id, product=product)
 
-            return render(request, 'questionnaire_res.html', {'products': selected_products})
+            return redirect(reverse('questionnaire_res', kwargs={'user_id': user_id}))
+
     else:
         form = QuestionnaireForm()
     return render(request, 'questionnaire.html', {'form': form})
 
+def questionnaire_res(request, user_id):
+    selected_products = UserProduct.objects.filter(user_id=user_id)
+    user = get_object_or_404(User, id=user_id)
+
+    return render(request, 'questionnaire_res.html', {'products': selected_products, 'user': user})

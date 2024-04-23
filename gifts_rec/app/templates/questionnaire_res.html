@@ -3,12 +3,13 @@
 Questionnaire Results - {{ block.super }}
 {% endblock title %}
 {% block body %}
-    <div id="questionnaire-products" action="">
-        {% for product in products %}
-                <h3> {{ product.title }} </h3>
-                <p>{{ product.description}}</p>
-                <p>Price: {{ product.price }}</p>
-        {% endfor %}
+    <div id="questionnaire-products">
+        <h1>Results for - {{ user.username }}</h1>
+            {% for user_product in products %}
+                <a href="{% url 'product-page' user_product.product.id %}" target="_blank">{{ user_product.product.title }}</a>
+                <p>{{ user_product.product.description }}</p>
+                <p>Price: {{ user_product.product.price }}</p>
+            {% endfor %}
     </div>
 
 {% endblock body %}
