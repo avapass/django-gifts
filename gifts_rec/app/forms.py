@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.forms import ValidationError
 from django.contrib.auth import authenticate
-# from .models import Questionnaire
+from .models import Questionnaire, Question, Answer
 
 # class ContactForm(forms.Form):
 #     email = forms.EmailField(required=True)
@@ -34,13 +34,17 @@ class CreateUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'email', 'password1', 'password2']
-
-AW1 = {"1": "blue", "2": "green", "3": "red"}
-
+        
 class QuestionnaireForm(forms.Form):
-    q1 = forms.CharField(label='What color do you like the most?', widget=forms.Select(choices=AW1))
+    def __init__(self, *args, **kwargs):
+        super(QuestionnaireForm, self).__init__(*args, **kwargs)
+        questionnaire = Questionnaire.objects.first()
+        questions = questionnaire.questions.all()
 
-# class QuestionnaireForm(forms.Form):
-#     class Meta:
-#         model = Questionnaire
-#         fields = '__all__'
+        for question in questions:
+            choices = [(choice.id, choice.text) for choice in question.answers.all()]
+            self.fields['question_{}'.format(question.id)] = forms.ChoiceField(
+                label = question.text,
+                choices = choices,
+                widget = forms.RadioSelect
+            )

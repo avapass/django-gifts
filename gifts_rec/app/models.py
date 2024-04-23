@@ -17,11 +17,37 @@ class Product(models.Model):
     def get_absolute_url(self):
         return reverse_lazy("product-page", args=(self.id,))
 
-# A1 = (
-#     ('green', 'GREEN'),
-#     ('blue', 'BLUE'),
-#     ('red', 'RED'),
-# )
+class Questionnaire(models.Model):
+    title = models.CharField(max_length=30)
+    description = models.CharField(max_length=100)
+    start_date = models.DateField()
+    end_date = models.DateField()
 
-# class Questionnaire(models.Model):
-#     q1 = models.CharField(max_length=15, choices=A1, default='green')
+class Question(models.Model):
+    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE, related_name='questions', blank=True)
+    text = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.text
+
+class Answer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', blank=True)
+    text = models.CharField(max_length=50)
+    value = models.IntegerField(default=0)
+
+    def __str__(self):
+        return self.text
+
+class Response(models.Model):
+    questionnaire = models.ForeignKey(Questionnaire, on_delete=models.CASCADE, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, blank=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, blank=True)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, blank=True)
+
+
+# class User(AbstractUser):
+#     friends = models.ManyToManyField("User", blank=True)
+
+# class FriendRequest(models.Model):
+#     from_user = models.ForeignKey(User, related_name='from_user', on_delete=models.CASCADE)
+#     to_user = models.ForeignKey(User, related_name='to_user', on_delete=models.CASCADE)

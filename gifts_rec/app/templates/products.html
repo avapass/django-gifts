@@ -13,7 +13,19 @@ Products list - {{ block.super }}
                             <img style="width:200px; height:auto;" src="{% if product.image %}{{ product.image.url }}{% endif %}" class="card-img-top"></br>
                             <a href="{% url 'product-page' product.id %}" target="_blank">{{ product }}</a>
                         </h5>
-                        <p class="card-text">{{ product.price }} EUROS </p>
+                        <p class="card-text">{{ product.price }} EUROS</p>
+                        <div id="favourite-section">
+                            {% if is_favourite %}
+                                <a href="{% url 'favourite-prod' product.id %}">
+                                    <i class="bi bi-heart-fill"></i>
+                                </a>
+                            {% else %}
+                                <a href="{% url 'favourite-prod' product.id %}">
+                                    <i class="bi bi-heart"></i>
+                                </a>
+                            {% endif %}
+                        </div>
+                        </p>
                     </div>
                 </div>
             </div>

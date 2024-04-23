@@ -32,4 +32,5 @@ urlpatterns = [
     path('login', views.custom_login, name="login"),
     path('logout', views.logout_view, name="logout"),
     path('questionnaire', views.questionnaire, name='questionnaire'),
+    path('questionnaire-result', views.questionnaire_res, name='questionnaire-result')
 ] + static(MEDIA_URL, document_root=MEDIA_ROOT)

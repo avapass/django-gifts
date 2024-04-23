@@ -3,11 +3,12 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 
 from django.contrib import messages
 
-from .models import Product
-from .forms import CustomLoginForm, QuestionnaireForm, CreateUserForm
+from .models import Product, Question, Answer, Questionnaire
+from .forms import CustomLoginForm, CreateUserForm, QuestionnaireForm
 
 # Create your views here.
 
@@ -86,14 +87,24 @@ def logout_view(request):
 
 @login_required
 def questionnaire(request):
-    form = QuestionnaireForm()
-    if request.method == "POST":
+    questionnaire = Questionnaire.objects.first()
+
+    if request.method == 'POST':
         form = QuestionnaireForm(request.POST)
         if form.is_valid():
-            return redirect("/")
-        else:
-            HttpResponse("ERROR")
+            for question in questionnaire.questions.all():
+                preference = form.cleaned_data.get('question_{}'.format(question.id))
+                return HttpResponse("ok")
+    else:
+        form = QuestionnaireForm()
     return render(request, 'questionnaire.html', {'form': form})
+
+
+
+def questionnaire_res(request):
+    return HttpResponse("Hello, this is your result items")
+
+
 
 # class CreateQuestionnaireView(CreateView):
 #     model = Questionnaire
