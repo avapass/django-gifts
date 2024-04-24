@@ -13,9 +13,13 @@
 <h1>Your friends</h1>
  <ul>
     {% for friend in friends %}
+    <br>
         <li>{{ friend.friend.username }}</li>
         <a href="{% url 'favourite-list-user' user_id=friend.friend.id %}">Click to check your friends' favorites</a>
+        <br>
+        <a href="{% url 'questionnaire_res' user_id=friend.friend.id %}">Click to check your friends' results to the quiz</a>
         <form method="post" action="{% url 'delete-friend' friend.id %}">
+            <br>
             {% csrf_token %}
             <button type="submit">Delete</button>
         </form>
