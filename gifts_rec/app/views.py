@@ -25,10 +25,6 @@ def product(request, id):
     product = get_object_or_404(Product, id=id)
     return render(request, 'product.html', {'product':product})
 
-# def favourite_list(request):
-#     favorite_prod = request.user.favourite.all()
-#     return render(request, 'favourite_list.html', {'favourite_prod': favorite_prod})
-
 def favourite_list(request, user_id=None):
     if user_id:
         user = get_object_or_404(User, id=user_id)
@@ -121,7 +117,7 @@ def questionnaire_res(request, user_id):
 
     return render(request, 'questionnaire_res.html', {'products': selected_products, 'user': user})
 
-def add_friend(request):
+def friends_page(request):
     if request.method == 'POST':
         form = FriendRequestForm(request.POST)
         if form.is_valid():
@@ -138,11 +134,9 @@ def add_friend(request):
                 messages.error(request, 'You cannot add yourself as a friend.')
     else:
         form = FriendRequestForm()
-    return render(request, 'add_friend.html', {'form': form})
 
-def friends_page(request):
     friends = Friend.objects.filter(user=request.user)
-    return render(request, 'friends_page.html', {'friends': friends})
+    return render(request, 'friends_page.html', {'form': form, 'friends': friends})
 
 def delete_friend(request, friend_id):
     friend = get_object_or_404(Friend, id=friend_id)

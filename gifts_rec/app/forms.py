@@ -5,17 +5,6 @@ from django.forms import ValidationError
 from django.contrib.auth import authenticate
 from .models import Questionnaire, Question, Answer
 
-# class ContactForm(forms.Form):
-#     email = forms.EmailField(required=True)
-#     subject = forms.CharField(label="Your subject here")
-#     message = forms.CharField(widget=forms.Textarea())
-
-#     def clean_email(self):
-#             email = self.cleaned_data["email"]
-#             if not email.endswith("@gmail.com"):
-#                 raise ValidationError("Email invalid!")
-#             return email
-
 class CustomLoginForm(forms.Form):
     username = forms.CharField()
     password = forms.CharField(widget=forms.PasswordInput)
