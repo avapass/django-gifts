@@ -48,3 +48,6 @@ class QuestionnaireForm(forms.Form):
                 choices = choices,
                 widget = forms.RadioSelect
             )
+
+class FriendRequestForm(forms.Form):
+    friend_username = forms.CharField(label='Friend Username', max_length=150)

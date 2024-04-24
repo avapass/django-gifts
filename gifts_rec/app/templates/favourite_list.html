@@ -5,6 +5,13 @@ Favourites - {{ block.super }}
 {% block body %}
 
 <div class="row">
+    
+    {% if user == request.user %}
+        <h1> Your favourite products </h1>
+    {% else %}
+        <h1> {{ user.username }}'s favourite products</h1>
+    {% endif %}
+
     {% for product in favourite_prod %}
     <div class="col-md-4">
         <div class="card">

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block body %}
+<h1>Your friends</h1>
+ <ul>
+    {% for friend in friends %}
+        <li>{{ friend.friend.username }}</li>
+        <a href="{% url 'favourite-list-user' user_id=friend.friend.id %}">Click to check your friends' favorites</a>
+        <form method="post" action="{% url 'delete-friend' friend.id %}">
+            {% csrf_token %}
+            <button type="submit">Delete</button>
+        </form>
+    {% endfor %}
+ </ul>
+{% endblock body %}

@@ -8,65 +8,36 @@ from django.urls import reverse
 
 from django.contrib import messages
 
-from .models import Product, Question, Answer, Questionnaire, UserProduct
-from .forms import CustomLoginForm, CreateUserForm, QuestionnaireForm
+from .models import Product, Question, Answer, Questionnaire, UserProduct, Friend
+from .forms import CustomLoginForm, CreateUserForm, QuestionnaireForm, FriendRequestForm
 
 # Create your views here.
 
 def hello(request):
     return render(request, "index.html")
 
-# def products_list(request):
-#     products = Product.objects.all().order_by("-price", "title")
-#     favourite_products_ids = request.user.favourite.values_list('id', flat=True)
-#     favourite_status = {product.id: product.id in favourite_products_ids for product in products}
-
-#     context = {
-#         'products': products,
-#         'favourite_status': favourite_status,
-#     }
-
-#     return render(request, "products.html", context)
-
 def products_list(request):
     products = Product.objects.all().order_by("-price", "title").prefetch_related('favourite')
     return render(request, 'products.html', {'products': products})
 
-# @login_required
-# def product(request, id):
-#     product = get_object_or_404(Product, id=id)
-#     is_favourite = False
-#     if product.favourite.filter(id=request.user.id).exists():
-#         is_favourite = True
-
-#     context = {
-#         'product': product,
-#         'is_favourite': is_favourite
-#     }
-#     return render(request, "product.html", context)
-
+@login_required
 def product(request, id):
     product = get_object_or_404(Product, id=id)
     return render(request, 'product.html', {'product':product})
 
-# @login_required
 # def favourite_list(request):
-#     user = request.user
-#     favourite_prod = user.favourite.all()
-#     return render(request, "favourite_list.html", {"favourite_prod": favourite_prod})
+#     favorite_prod = request.user.favourite.all()
+#     return render(request, 'favourite_list.html', {'favourite_prod': favorite_prod})
 
-def favourite_list(request):
-    favorite_prod = request.user.favourite.all()
-    return render(request, 'favourite_list.html', {'favourite_prod': favorite_prod})
+def favourite_list(request, user_id=None):
+    if user_id:
+        user = get_object_or_404(User, id=user_id)
+    else:
+        user = request.user
 
-# def favourite_prod(request, id):
-#     product = get_object_or_404(Product, id=id)
-#     if product.favourite.filter(id=request.user.id).exists():
-#         product.favourite.remove(request.user)
-#     else:
-#         product.favourite.add(request.user)
-#     # return HttpResponseRedirect(product.get_absolute_url())
-#     return redirect('products-list')
+    favourite_prod = user.favourite.all()
+    
+    return render(request, 'favourite_list.html', {'user': user, 'favourite_prod': favourite_prod})
 
 def toggle_favourite(request, id):
     product = get_object_or_404(Product, id=id)
@@ -149,3 +120,39 @@ def questionnaire_res(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
     return render(request, 'questionnaire_res.html', {'products': selected_products, 'user': user})
+
+def add_friend(request):
+    if request.method == 'POST':
+        form = FriendRequestForm(request.POST)
+        if form.is_valid():
+            friend_username = form.cleaned_data['friend_username']
+            friend = User.objects.get(username=friend_username)
+
+            if friend != request.user:
+                if not Friend.objects.filter(user=request.user, friend=friend).exists():
+                    Friend.objects.create(user=request.user, friend=friend)
+                    return redirect('friends-page')
+                else:
+                    messages.error(request, 'You are already friends with this user')
+            else:
+                messages.error(request, 'You cannot add yourself as a friend.')
+    else:
+        form = FriendRequestForm()
+    return render(request, 'add_friend.html', {'form': form})
+
+def friends_page(request):
+    friends = Friend.objects.filter(user=request.user)
+    return render(request, 'friends_page.html', {'friends': friends})
+
+def delete_friend(request, friend_id):
+    friend = get_object_or_404(Friend, id=friend_id)
+    if request.method == 'POST':
+        if friend.user == request.user:
+            friend.delete()
+        return redirect('friends-page')
+
+
+# def friend_detail(request, friend_id):
+#     friend = User.objects.get(id=friend_id)
+#     friend_products = UserProduct.objects.filter(user=friend)
+#     return render(request, 'friend_details.html', {'friend': friend, 'friend_products': friend_products})
