@@ -16,38 +16,65 @@ from .forms import CustomLoginForm, CreateUserForm, QuestionnaireForm
 def hello(request):
     return render(request, "index.html")
 
+# def products_list(request):
+#     products = Product.objects.all().order_by("-price", "title")
+#     favourite_products_ids = request.user.favourite.values_list('id', flat=True)
+#     favourite_status = {product.id: product.id in favourite_products_ids for product in products}
+
+#     context = {
+#         'products': products,
+#         'favourite_status': favourite_status,
+#     }
+
+#     return render(request, "products.html", context)
+
 def products_list(request):
-    products = Product.objects.all()
-    products = products.order_by("-price", "title")
+    products = Product.objects.all().order_by("-price", "title").prefetch_related('favourite')
+    return render(request, 'products.html', {'products': products})
 
-    return render(request, "products.html", {"products": products})
+# @login_required
+# def product(request, id):
+#     product = get_object_or_404(Product, id=id)
+#     is_favourite = False
+#     if product.favourite.filter(id=request.user.id).exists():
+#         is_favourite = True
 
-@login_required
+#     context = {
+#         'product': product,
+#         'is_favourite': is_favourite
+#     }
+#     return render(request, "product.html", context)
+
 def product(request, id):
     product = get_object_or_404(Product, id=id)
-    is_favourite = False
-    if product.favourite.filter(id=request.user.id).exists():
-        is_favourite = True
+    return render(request, 'product.html', {'product':product})
 
-    context = {
-        'product': product,
-        'is_favourite': is_favourite
-    }
-    return render(request, "product.html", context)
+# @login_required
+# def favourite_list(request):
+#     user = request.user
+#     favourite_prod = user.favourite.all()
+#     return render(request, "favourite_list.html", {"favourite_prod": favourite_prod})
 
-@login_required
 def favourite_list(request):
-    user = request.user
-    favourite_prod = user.favourite.all()
-    return render(request, "favourite_list.html", {"favourite_prod": favourite_prod})
+    favorite_prod = request.user.favourite.all()
+    return render(request, 'favourite_list.html', {'favourite_prod': favorite_prod})
 
-def favourite_prod(request, id):
+# def favourite_prod(request, id):
+#     product = get_object_or_404(Product, id=id)
+#     if product.favourite.filter(id=request.user.id).exists():
+#         product.favourite.remove(request.user)
+#     else:
+#         product.favourite.add(request.user)
+#     # return HttpResponseRedirect(product.get_absolute_url())
+#     return redirect('products-list')
+
+def toggle_favourite(request, id):
     product = get_object_or_404(Product, id=id)
-    if product.favourite.filter(id=request.user.id).exists():
+    if request.user in product.favourite.all():
         product.favourite.remove(request.user)
     else:
         product.favourite.add(request.user)
-    return HttpResponseRedirect(product.get_absolute_url())
+    return redirect('products-list')
 
 def custom_register(request):
     if request.user.is_authenticated:
@@ -90,7 +117,7 @@ def questionnaire(request):
         form = QuestionnaireForm(request.POST)
         if form.is_valid():
             user_id = request.user.id
-            
+
             UserProduct.objects.filter(user=request.user).delete()
 
             user_preferences = {}
