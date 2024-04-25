@@ -34,7 +34,7 @@ Questionnaire Results - {{ block.super }}
 
 {% block body %}
     <div id="questionnaire-products">
-        {% if user == request.user %}
+        {% if user == request.user or user == None %}
         <h1 style="font-family: 'Arial', sans-serif; font-size: 36px; color: #333; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); padding: 20px;"> Based on your choices, here are some recommendations.</h1>
         {% else %}
         <h1 style="font-family: 'Arial', sans-serif; font-size: 36px; color: #333; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); padding: 20px;"> Based on {{ user.username }}'s choices, here are some recommendations.</h1>

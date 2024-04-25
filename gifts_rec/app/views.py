@@ -5,6 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.urls import reverse
+from django.db.models import Q
+from random import sample
 
 from django.contrib import messages
 
@@ -95,15 +97,23 @@ def questionnaire(request):
                 preference_text = question.answers.get(id=preference_id).text if preference_id is not None else None
                 user_preferences[question.id] = preference_text
 
-            products = Product.objects.all()
+            selected_keywords = [keyword for keyword in user_preferences.values() if keyword is not None]
 
-            search_words = [preference for preference in user_preferences.values() if preference is not None]
-            selected_products = []
+            if len(selected_keywords) > 2:
+                selected_keywords = sample(selected_keywords, 2)
 
-            for product in products:
-                if all(word in product.description for word in search_words):
-                    selected_products.append(product)
+            filters = []
             
+            for keyword in selected_keywords:
+                q_obj = Q(keywords__text=keyword)
+                filters.append(q_obj)
+            
+            combined_filters = Q()
+            for q_obj in filters:
+                combined_filters |= q_obj
+
+            selected_products = Product.objects.filter(combined_filters)
+
             for product in selected_products:
                 UserProduct.objects.get_or_create(user_id=user_id, product=product)
 
@@ -115,8 +125,8 @@ def questionnaire(request):
 
 @login_required
 def questionnaire_res(request, user_id):
-    selected_products = UserProduct.objects.filter(user_id=user_id)
     user = get_object_or_404(User, id=user_id)
+    selected_products = UserProduct.objects.filter(user_id=user_id)
 
     return render(request, 'questionnaire_res.html', {'products': selected_products, 'user': user})
 
@@ -150,8 +160,3 @@ def delete_friend(request, friend_id):
             friend.delete()
         return redirect('friends-page')
 
-
-# def friend_detail(request, friend_id):
-#     friend = User.objects.get(id=friend_id)
-#     friend_products = UserProduct.objects.filter(user=friend)
-#     return render(request, 'friend_details.html', {'friend': friend, 'friend_products': friend_products})

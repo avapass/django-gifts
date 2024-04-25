@@ -4,12 +4,19 @@ from django.urls import reverse_lazy
 
 # Create your models here.
 
+class Keyword(models.Model):
+    text = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return f"Keyword - {self.text}"
+
 class Product(models.Model):
     title = models.CharField(max_length=50, unique=True)
     price = models.FloatField(db_index=True)
     description = models.CharField(max_length=150, null=True, blank=True, help_text="Add a description for this product")
     image = models.FileField(null=True, blank=True)
     favourite = models.ManyToManyField(User, related_name='favourite', blank=True)
+    keywords = models.ManyToManyField(Keyword)
 
     def __str__(self):
         return f"Product {self.title}"
@@ -33,7 +40,6 @@ class Question(models.Model):
 class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', blank=True)
     text = models.CharField(max_length=50)
-    value = models.IntegerField(default=0)
 
     def __str__(self):
         return self.text
