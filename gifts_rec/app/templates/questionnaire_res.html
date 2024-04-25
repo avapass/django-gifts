@@ -2,17 +2,49 @@
 {% block title %}
 Questionnaire Results - {{ block.super }}
 {% endblock title %}
+{% block styles %}
+
+<style>
+    /* Custom CSS to style the questionnaire results */
+    #questionnaire-products {
+        text-align: center;
+        margin: 20px auto;
+        max-width: 800px;
+    }
+    .product {
+        background-color: #95B9C7 !important;
+        border: 1px solid green;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+    }
+    .product-title {
+        font-size: 20px;
+        margin-bottom: 5px;
+    }
+    .product-description {
+
+        color:black;
+    }
+    .product-price {
+        font-weight: bold;
+    }
+</style>
+{% endblock styles %}
+
 {% block body %}
     <div id="questionnaire-products">
         {% if user == request.user %}
-        <h1> Your results for the quiz </h1>
+        <h1 style="font-family: 'Arial', sans-serif; font-size: 36px; color: #333; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); padding: 20px;"> Based on your choices, here are some recommendations.</h1>
         {% else %}
-        <h1> Results for - {{ user.username }}</h1>
+        <h1 style="font-family: 'Arial', sans-serif; font-size: 36px; color: #333; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); padding: 20px;"> Based on {{ user.username }}'s choices, here are some recommendations.</h1>
         {% endif %}
             {% for user_product in products %}
-                <a href="{% url 'product-page' user_product.product.id %}" target="_blank">{{ user_product.product.title }}</a>
-                <p>{{ user_product.product.description }}</p>
-                <p>Price: {{ user_product.product.price }}</p>
+                <div class="product">
+                    <h2 class="product-title"><a href="{% url 'product-page' user_product.product.id %}" target="_blank">{{ user_product.product.title }}</a></h2>
+                    <p class="product-description">{{ user_product.product.description }}</p>
+                    <p class="product-price">Price: {{ user_product.product.price }}</p>
+                </div>
             {% endfor %}
     </div>
 

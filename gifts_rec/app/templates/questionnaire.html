@@ -1,10 +1,42 @@
 {% extends "base.html" %}
+{% block styles %}
+<style>
+    /* Custom CSS to center-align all form elements */
+    form {
+        text-align: center; /* Center-align the form content */
+    }
+
+    label {
+        font-weight: bold; /* Make labels bold */
+        display: block; /* Display labels as block elements */
+    }
+    input[type="radio"],
+    input[type="checkbox"] {
+        margin-right: 5px; /* Add a little space between radio buttons/checkboxes and their labels */
+        vertical-align: middle; /* Align radio buttons/checkboxes vertically with their labels */
+    }
+    input[type="submit"] {
+        background-color:rebeccapurple;
+        color: #fff;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+    input[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock styles %}
 {% block body %}
-<h1>Questionnaire</h1>
-<form method="POST" action="" >
-    {% csrf_token %}
-    
-        {{ form.as_p }}
-    <input type="submit" value="Submit your answers!"/><br><br>
-</form>
+<div class="container">
+    <h1 class="text-center">Questionnaire</h1>
+    <form method="POST" action="" class="mt-4">
+        {% csrf_token %}
+        
+            {{ form.as_p }}
+        <input type="submit" class="btn btn-primary" value="Submit your answers!"><br><br>
+    </form>
+</div>
 {% endblock body %}

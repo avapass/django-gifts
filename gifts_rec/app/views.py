@@ -24,7 +24,8 @@ def products_list(request):
 def product(request, id):
     product = get_object_or_404(Product, id=id)
     return render(request, 'product.html', {'product':product})
-
+    
+@login_required
 def favourite_list(request, user_id=None):
     if user_id:
         user = get_object_or_404(User, id=user_id)
@@ -35,6 +36,7 @@ def favourite_list(request, user_id=None):
     
     return render(request, 'favourite_list.html', {'user': user, 'favourite_prod': favourite_prod})
 
+@login_required
 def toggle_favourite(request, id):
     product = get_object_or_404(Product, id=id)
     if request.user in product.favourite.all():
@@ -111,12 +113,14 @@ def questionnaire(request):
         form = QuestionnaireForm()
     return render(request, 'questionnaire.html', {'form': form})
 
+@login_required
 def questionnaire_res(request, user_id):
     selected_products = UserProduct.objects.filter(user_id=user_id)
     user = get_object_or_404(User, id=user_id)
 
     return render(request, 'questionnaire_res.html', {'products': selected_products, 'user': user})
 
+@login_required
 def friends_page(request):
     if request.method == 'POST':
         form = FriendRequestForm(request.POST)
@@ -138,6 +142,7 @@ def friends_page(request):
     friends = Friend.objects.filter(user=request.user)
     return render(request, 'friends_page.html', {'form': form, 'friends': friends})
 
+@login_required
 def delete_friend(request, friend_id):
     friend = get_object_or_404(Friend, id=friend_id)
     if request.method == 'POST':

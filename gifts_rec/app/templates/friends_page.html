@@ -1,28 +1,48 @@
 {% extends "base.html" %}
+
+{% block styles %}
+<style>
+
+</style>
+{% endblock styles %}
+
+
 {% block body %}
-    <h1>Add friend</h1>
-    {% for message in messages %}
-            <div>{{ message }}</div>
-        {% endfor %}
-    <form method="POST" action="" >
-        {% csrf_token %}
-        
-            {{ form.as_p }}
-        <input type="submit" value="send friend request"/><br><br>
-    </form>
-<h1>Your friends</h1>
- <ul>
-    {% for friend in friends %}
-    <br>
-        <li>{{ friend.friend.username }}</li>
-        <a href="{% url 'favourite-list-user' user_id=friend.friend.id %}">Click to check your friends' favorites</a>
-        <br>
-        <a href="{% url 'questionnaire_res' user_id=friend.friend.id %}">Click to check your friends' results to the quiz</a>
-        <form method="post" action="{% url 'delete-friend' friend.id %}">
-            <br>
-            {% csrf_token %}
-            <button type="submit">Delete</button>
-        </form>
-    {% endfor %}
- </ul>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <h1>Add Friend</h1>
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message">{{ message }}</div>
+                    {% endfor %}
+                </div>
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    <div class="friend-form">
+                        {{ form.as_p }}
+                        <input type="submit" value="Send Friend Request" class="btn-submit" />
+                    </div>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h1>Your Friends</h1>
+                <ul class="friend-list">
+                    {% for friend in friends %}
+                    <li class="friend-item">
+                        <span class="friend-username">{{ friend.friend.username }}</span>
+                        <a href="{% url 'favourite-list-user' user_id=friend.friend.id %}" class="friend-link">Check your friends' favorites</a>
+                        <br>
+                        <a href="{% url 'questionnaire_res' user_id=friend.friend.id %}" class="friend-link">Check your friends' quiz results</a>
+                        <br><br>
+                        <form method="post" action="{% url 'delete-friend' friend.id %}" class="friend-delete-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-delete">Delete this user</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock body %}

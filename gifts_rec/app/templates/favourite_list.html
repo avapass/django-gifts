@@ -2,26 +2,58 @@
 {% block title %}
 Favourites - {{ block.super }}
 {% endblock title %}
+
 {% block body %}
+<style>
+    .card-body {
+        text-align: center;
+    }
+    .album {
+        background-color: #7abecc !important;
+    }
+  </style>
 
-<div class="row">
-    
-    {% if user == request.user %}
-        <h1> Your favourite products </h1>
-    {% else %}
-        <h1> {{ user.username }}'s favourite products</h1>
-    {% endif %}
+<h1 style="color:rebeccapurple; text-align: center; font-size:x-large;">
+            {% if user == request.user %}
+                Your favourite products
+            {% else %}
+                {{ user.username }}'s favourite products
+            {% endif %} 
+</h1>
 
+<div class="album py-5 bg-light">
+    <div class="container">
+        <div class="row">
     {% for product in favourite_prod %}
+
+
     <div class="col-md-4">
-        <div class="card">
-            <div class="card-body">
+        <div class="card mb-4 box-shadow">
                 <h5 class="card-title">
-                    <img style="width:200px; height:auto;" src="{% if product.image %}{{ product.image.url }}{% endif %}" class="card-img-top"></br>
-                    <a href="{% url 'product-page' product.id %}" target="_blank">{{ product.title }}</a>
+                    <img style="width:100%; height:200px; display:block" alt='Thumbnail [100%x200]' src="{% if product.image %}{{ product.image.url }}{% endif %}" class="card-img-top">
                 </h5>
-                <p class="card-text">{{ product.price }} EUROS </p>
-            </div>
+                <div class="card-body">
+                <p class="card-text">
+                    <a href="{% url 'product-page' product.id %}" target="_blank">{{ product.title }}</a><br>
+                    {{ product.price }} EUROS <br> {{ product.description }}</p>
+                    <div class="d-flex justify-content-center align-items-center">
+                        <div class="btn-group"
+                            <div id="favourite-section">
+                                <form action="{% url 'toggle-favourite' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    {% if request.user in product.favourite.all %}
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-heart-fill"></i> Remove from favourites
+                                        </button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                            <i class="bi bi-heart"></i> Add to favourites
+                                        </button>
+                                    {% endif %}
+                                </form>
+                            </div>
+                    </div>
+                </div>
         </div>
     </div>
     {% empty %}
@@ -29,6 +61,8 @@ Favourites - {{ block.super }}
             <h3>No favourite products found.</h3>
         </div>
     {% endfor %}
+    </div>
+</div>
 </div>
 
 {% endblock body %}
