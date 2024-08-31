@@ -37,6 +37,7 @@
       <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
         <li><a href="{% url 'home' %}" class="nav-link px-2 text-secondary">Homepage</a></li>
         <li><a href="{% url 'products-list' %}" class="nav-link px-2 text-white">Products</a></li>
+        <li><a href="{% url 'favourite-list' %}" class="nav-link px-2 text-white">Favourites</a></li>
         <li><a href="{% url 'questionnaire' %}" class="nav-link px-2 text-white">Questionnaire</a></li>
         {% if user.is_authenticated %}
         <li><a href="{% url 'questionnaire_res' user.id %}" class="nav-link px-2 text-white">Questionnaire results</a></li>
@@ -69,9 +70,9 @@
         </div>
         <hr class="featurette-divider">
 
-        <footer class="container" style="bottom:0; position:fixed; text-align:left;">
+        <footer class="container" style="bottom:0; position:static; text-align:left;">
             <p class="float-end"><a href="#">Back to top</a></p>
-            <p>&copy; 2024 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+            <p>&copy; 2024 Ana-Maria Pasarica &middot; <a href="#">Github</a> &middot; <a href="#">Other projects</a></p>
         </footer>
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
